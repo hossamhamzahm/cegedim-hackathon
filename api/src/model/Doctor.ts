@@ -4,6 +4,7 @@ import SystemUser from "./SystemUser";
 
 
 
+
 const Doctor = sequelize.define(
     'Doctor',
     {

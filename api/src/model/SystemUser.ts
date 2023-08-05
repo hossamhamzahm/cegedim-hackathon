@@ -19,9 +19,9 @@ const SystemUser = sequelize.define(
             	isEmail: true
             },
         },
-        hashed_password: {
+        password: {
             type: DataTypes.STRING(128),
-            unique: true,
+            allowNull: true
         },
         type: {
             type: DataTypes.ENUM,
