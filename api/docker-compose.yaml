@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  mysql-db:
+    image: mysql:latest
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: "12345"
+      MYSQL_PASSWORD: "12345"
+      MYSQL_USER: dev_user  
+      MYSQL_DATABASE: medicin_app
+    ports:
+      - "3366:3306"
+
+  node-alpine:
+    container_name: node
+  # su_node:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    # volumes: 
+    #   - .:/app
+    environment:
+      DB_HOST: mysql-db
+      DB_PORT: 3306
+    # working_dir: /app
+    ports:
+      - "3030:3030"
+    depends_on: 
+      - mysql-db
