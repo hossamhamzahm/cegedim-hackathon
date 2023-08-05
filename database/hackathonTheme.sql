@@ -8,7 +8,7 @@ AS
 CREATE TABLE SystemUser(
 username VARCHAR(20),
 password VARCHAR(20),
-type VARCHAR(20),
+type ENUM ('patient','doctor','pharmacy') NOT NULL,
 PRIMARY KEY(username));
 
 CREATE TABLE Patient(
@@ -16,7 +16,7 @@ pID INT IDENTITY(1,1),
 firstName VARCHAR(20),
 lastName VARCHAR(20),
 dateOfBirth DATE,
-age AS FLOOR(dateOfBirth - CURRENT_TIMESTAMP),
+age AS YEAR(dateOfBirth) - YEAR(CURRENT_TIMESTAMP),
 gender VARCHAR(20),
 username VARCHAR(20),
 phoneNumber BIGINT CONSTRAINT ElevenDigits CHECK (phoneNumber BETWEEN 01000000000 AND 01999999999),
