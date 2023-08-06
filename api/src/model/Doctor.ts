@@ -22,21 +22,12 @@ const Doctor = sequelize.define(
         },
         firstName: {
             type: DataTypes.STRING(20),
-            validate: {
-                isString: true
-            }
         },
         lastName: {
-            type: DataTypes.STRING(20),
-            validate: {
-                isString: true
-            }
+            type: DataTypes.STRING(20)
         },
         specialization: {
-            type: DataTypes.STRING(20),
-            validate: {
-                isString: true
-            }
+            type: DataTypes.STRING(20)
         }
     },
     {

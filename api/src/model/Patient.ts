@@ -20,16 +20,10 @@ const Patient = sequelize.define(
             },
         },
         firstName: {
-            type: DataTypes.STRING(20),
-            validate: {
-                isString: true
-            }
+            type: DataTypes.STRING(20)
         },
         lastName: {
-            type: DataTypes.STRING(20),
-            validate: {
-                isString: true
-            }
+            type: DataTypes.STRING(20)
         },
         dateOfBirth: {
             type: DataTypes.DATE,

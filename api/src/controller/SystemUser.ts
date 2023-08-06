@@ -1,7 +1,8 @@
 import SystemUser from "../model/SystemUser";
 import express from "express";
-import config from "../config";
 import sequelize from "../model/database";
+import Patient from "../model/Patient";
+import Doctor from "../model/Doctor";
 
 
 
@@ -30,55 +31,67 @@ import sequelize from "../model/database";
 
 
 
-// const signup = async (req: UserRequest, res: express.Response, next: express.NextFunction) => {
-// 	const { , email, password, f_name, l_name, phone, campus, faculty, gender } = req.body.student as {
-// 		username: string;
-// 		email: string;
-// 		password: string;
-// 		f_name: string;
-// 		l_name: string;
-// 		phone: number;
-// 		type: string;
-// 		faculty: string;
-// 		gender: string;
-// 		suspended?: string;
-// 	};
+const signup = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+	const { username, email, password, type, firstName, lastName, dateOfBirth, address, phoneNumber, gender, diagnosis, specialization } = req.body as {
+		username: string;
+		email: string;
+		password: string;
+		type: string;
+		firstName: string;
+		lastName: string;
+		dateOfBirth?: number;
+		phoneNumber?: string;
+		gender?: string;
+		address?: string;
+		diagnosis?: string;
+        specialization?: string;
+	};
+	const transaction = await sequelize.transaction();
 
-// 	if(!email.endsWith("@su.edu.eg"))
-// 		throw new ExpressError("Only SU students can register student accounts", 400);
-
-// 	const transaction = await sequelize.transaction();
-// 	const hashed_password = await bcrypt.hashSync(config.bcrypt_pepper + password, config.salt_rounds);
-
-// 	try{
-// 		const user = await User.create({ email, f_name, l_name, hashed_password, type: "student" }, { transaction });
-// 		const student = await Student.create(
-// 			{
-// 				student_db_id: user.getDataValue("user_db_id"),
-// 				student_id,
-// 				phone,
-// 				campus,
-// 				faculty,
-// 				gender,
-// 				suspended: false,
-// 			},
-// 			{ transaction }
-// 		);
+	try{
+		const systemUser = await SystemUser.create({ username, email, password, type }, { transaction });
 		
-// 		await transaction.commit();
-// 		req.user_db_instance = user;
-// 	}
-// 	catch(e: unknown){
-// 		await transaction.rollback();
-// 		throw e;
-// 	}
+        if(type == "patient"){
+            const patient = await Patient.create(
+                {
+                    username,
+                    firstName,
+                    lastName,
+                    dateOfBirth,
+                    phoneNumber,
+                    gender,
+                    address,
+                    diagnosis,
+                },
+                { transaction }
+            );
+        }
+        else{
+            const doctor = await Doctor.create(
+                {
+                    username,
+                    firstName,
+                    lastName,
+                    specialization,
+                },
+                { transaction }
+            );
+        }
+		
+		await transaction.commit();
+	}
+	catch(e: unknown){
+		await transaction.rollback();
+		throw e;
+	}
 
-// 	generate_jwt(req, res, next);
-// };
+	if(type == "patient") res.redirect("/api-v1/doctors")
+	else res.redirect("/api-v1/patients")
+};
 
 
 const login = async (req: express.Request, res: express.Response) => {
-    const { username = 'null', password = 'null' } = req.body.user;
+    const { username = 'null', password = 'null' } = req.body;
 
     // searching for the user by email
     const user = await SystemUser.findOne({ where: { username } });
@@ -97,7 +110,7 @@ const login = async (req: express.Request, res: express.Response) => {
 
 export default {
 	// index,
-	// signup,
+	signup,
 	login,
 	// logout,
 };
