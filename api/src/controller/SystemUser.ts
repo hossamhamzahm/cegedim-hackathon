@@ -112,9 +112,9 @@ const login = async (req: express.Request, res: express.Response) => {
     const user = await SystemUser.findOne({ where: { username } });
     if(!user) res.status(400).send({Error: 'Wrong username or password'});
 
-    if(user?.getDataValue("type") == ("Patient" || "patient")) return await Patient.findOne({ where: { username }})
-    if(user?.getDataValue("type") == ("Doctor" || "doctor")) return await Doctor.findOne({ where: { username }})
-    if(user?.getDataValue("type") == ("Pharmacy" || "pharmacy")) return await Pharmacy.findOne({ where: { username }})
+    if(user?.getDataValue("type") == ("Patient" || "patient")) res.send(await Patient.findOne({ where: { username }}))
+    if(user?.getDataValue("type") == ("Doctor" || "doctor")) res.send(await Doctor.findOne({ where: { username }}))
+    if(user?.getDataValue("type") == ("Pharmacy" || "pharmacy")) res.send(await Pharmacy.findOne({ where: { username }}))
 
     return res.status(200).send(user);
     // if(user.type == res.redirect('/doctors');
