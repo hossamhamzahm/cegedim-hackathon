@@ -1,43 +1,52 @@
 import { DataTypes }  from "sequelize";
 import sequelize from "./database";
-import SystemUser from "./SystemUser";
+import Doctor from "./Doctor";
+import Pharmacy from "./Pharmacy";
 
 
 
 
-const Pharmacy = sequelize.define(
-    'Pharmacy',
+const PharmacyRequest = sequelize.define(
+    'PharmacyRequest',
     {
-        pharmID: {
+        id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true
         },
-        username: {
+        pharm_username: {
             type: DataTypes.STRING(20),
             references: {
-                model: SystemUser,
+                model: Pharmacy,
                 key: 'username',
             },
         },
-        name: {
+        doctor_username: {
             type: DataTypes.STRING(20),
+            references: {
+                model: Doctor,
+                key: 'username',
+            },
         },
-        phoneNumber: {
-            type: DataTypes.BIGINT,
+        status: {
+            type: DataTypes.BOOLEAN,
         },
-        location: {
-            type: DataTypes.STRING(20)
+        message: {
+            type: DataTypes.STRING(200)
         }
     },
     {
-        tableName: 'Pharmacy',
+        tableName: 'PharmacyRequest',
         underscored: true,
         timestamps: false,
         indexes: [
             {
                 unique: true,
-                fields: ['username'],
+                fields: ['doctor_username'],
+            },
+            {
+                unique: true,
+                fields: ['pharmacy_username'],
             }
         ],
     }
@@ -55,10 +64,16 @@ const Pharmacy = sequelize.define(
 // Object.assign(Doctor.prototype, virtualFunctions);
 
 
-Pharmacy.belongsTo(SystemUser, {
-	foreignKey: "username",
+PharmacyRequest.belongsTo(Pharmacy, {
+	foreignKey: "pharmacy_username",
 	targetKey: "username",
 	onDelete: "CASCADE",
 });
 
-export default Pharmacy;
+PharmacyRequest.belongsTo(Doctor, {
+	foreignKey: "doctor_username",
+	targetKey: "username",
+	onDelete: "CASCADE",
+});
+
+export default PharmacyRequest;

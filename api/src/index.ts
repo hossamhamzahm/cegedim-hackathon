@@ -6,6 +6,7 @@ import migrate from "./model/migrate"
 import SystemUserRouter from "./router/SystemUser"
 import DoctorRouter from "./router/doctor"
 import PatientRouter from "./router/patient"
+import PharmacyRouter from "./router/pharmacy"
 import ExpressError from "./helper/ExpressError"
 import cors from "cors";
 
@@ -22,7 +23,7 @@ app.use(
 app.use('/api-v1/users', SystemUserRouter);
 app.use('/api-v1/doctors', DoctorRouter);
 app.use('/api-v1/patients', PatientRouter);
-app.use('/api-v1/pharmacy', PatientRouter);
+app.use('/api-v1/pharmacies', PharmacyRouter);
 
 app.get("*", (req: express.Request, res: express.Response) => {
     res.status(404).send({Error: "Invalid request"});

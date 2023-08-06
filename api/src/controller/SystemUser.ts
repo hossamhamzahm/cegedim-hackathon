@@ -33,7 +33,7 @@ import Pharmacy from "../model/Pharmacy";
 
 
 const signup = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-	const { username, email, password, type, firstName, lastName, dateOfBirth, address, phoneNumber, gender, diagnosis, specialization } = req.body as {
+	const { username, email, password, type, firstName, lastName, dateOfBirth, address, phoneNumber, gender, diagnosis, specialization, name, location } = req.body as {
 		username: string;
 		email: string;
 		password: string;
@@ -46,6 +46,8 @@ const signup = async (req: express.Request, res: express.Response, next: express
 		address?: string;
 		diagnosis?: string;
         specialization?: string;
+        name?: string;
+        location?: string;
 	};
 	const transaction = await sequelize.transaction();
 
@@ -78,6 +80,17 @@ const signup = async (req: express.Request, res: express.Response, next: express
                 { transaction }
             );
         }
+        else if(type == "Pharmacy"){
+            const pharmacy = await Pharmacy.create(
+                {
+                    username,
+                    name,
+                    phoneNumber,
+                    location,
+                },
+                { transaction }
+            );
+        }
 		
 		await transaction.commit();
 	}
@@ -86,7 +99,8 @@ const signup = async (req: express.Request, res: express.Response, next: express
 		throw e;
 	}
 
-	if(type == "patient") res.redirect("/api-v1/doctors")
+	if(type == "Patient") res.redirect("/api-v1/doctors")
+	else if(type == "Pharmacy") res.redirect("/api-v1/pharmacies")
 	else res.redirect("/api-v1/patients")
 };
 

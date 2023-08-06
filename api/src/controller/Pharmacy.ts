@@ -2,6 +2,8 @@ import express from "express";
 import Pharmacy from "../model/Pharmacy";
 import SystemUser from "../model/SystemUser";
 import ExpressError from "../helper/ExpressError";
+import Doctor from "../model/Doctor";
+import PharmacyRequest from "../model/PharmacyRequest";
 
 
 
@@ -20,7 +22,7 @@ const index = async (req: express.Request, res: express.Response, next: express.
             model: SystemUser,
             required: true,
         },
-        order: [['pahrmID', 'DESC']],
+        order: [['pharmID', 'DESC']],
     });
 
 	res.send(pahramcies);
@@ -37,10 +39,40 @@ const show = async (req: express.Request, res: express.Response, next: express.N
     res.send(pharmacy);
 };
 
+// :username/doctor_request/:doctor_username
+const request_doctor = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+	const { username, doctor_username } = req.params;
+	const pharmacy = await Pharmacy.findOne({where: {username}});
+	const doctor = await Doctor.findOne({where: {username: doctor_username}});
+	
+    if(!pharmacy) throw new ExpressError(`No pharmacy with username ${username}`, 400);
+    if(!doctor) throw new ExpressError(`No doctor with username ${doctor_username}`, 400);
+    
+
+    const request = PharmacyRequest.create({
+        pharm_username: username,
+        doctor_username,
+        status: false,
+    })
+
+    res.send(request);
+};
+
+
+
+// :username/doctor_request/
+const show_requests = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+	const { username } = req.params;
+	const requests = await PharmacyRequest.findAll({where: {pharm_username: username}});
+	
+    res.send(requests);
+};
 
 
 
 export default {
 	index,
 	show,
+    request_doctor,
+    show_requests,
 };
