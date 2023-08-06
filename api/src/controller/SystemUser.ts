@@ -51,7 +51,7 @@ const signup = async (req: express.Request, res: express.Response, next: express
 	try{
 		const systemUser = await SystemUser.create({ username, email, password, type }, { transaction });
 		
-        if(type == "patient"){
+        if(type == "Patient"){
             const patient = await Patient.create(
                 {
                     username,
@@ -66,7 +66,7 @@ const signup = async (req: express.Request, res: express.Response, next: express
                 { transaction }
             );
         }
-        else{
+        else if(type == "Doctor"){
             const doctor = await Doctor.create(
                 {
                     username,

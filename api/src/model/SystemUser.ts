@@ -25,7 +25,7 @@ const SystemUser = sequelize.define(
         },
         type: {
             type: DataTypes.ENUM,
-            values: ['patient', 'pharmacy', 'doctor'],
+            values: ['Patient', 'Pharmacy', 'Doctor'],
         }
     },
     {
