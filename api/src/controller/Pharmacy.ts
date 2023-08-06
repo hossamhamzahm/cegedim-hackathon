@@ -42,6 +42,8 @@ const show = async (req: express.Request, res: express.Response, next: express.N
 // :username/doctor_request/:doctor_username
 const request_doctor = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
 	const { username, doctor_username } = req.params;
+    const { patient_username = null } = req.query;
+
 	const pharmacy = await Pharmacy.findOne({where: {username}});
 	const doctor = await Doctor.findOne({where: {username: doctor_username}});
 	
@@ -53,6 +55,9 @@ const request_doctor = async (req: express.Request, res: express.Response, next:
         pharm_username: username,
         doctor_username,
         status: false,
+        // patient_username,
+        pharmacyName: pharmacy.getDataValue("name"),
+        // diagnosis: pharmacy.getDataValue("diagnosis"),
     })
 
     res.send(request);

@@ -2,6 +2,7 @@ import { DataTypes }  from "sequelize";
 import sequelize from "./database";
 import Doctor from "./Doctor";
 import Pharmacy from "./Pharmacy";
+import Patient from "../model/Patient";
 
 
 
@@ -30,12 +31,27 @@ const PharmacyRequest = sequelize.define(
             },
             unique: false
         },
+        patient_username: {
+            type: DataTypes.STRING(20),
+            references: {
+                model: Patient,
+                key: 'username',
+            },
+            unique: false
+        },
         status: {
             type: DataTypes.BOOLEAN,
         },
         message: {
             type: DataTypes.STRING(200)
+        },
+        diagnosis: {
+            type: DataTypes.STRING(100)
+        },
+        pharmacyName: {
+            type: DataTypes.STRING(100)
         }
+        
     },
     {
         tableName: 'PharmacyRequest',
@@ -65,6 +81,13 @@ PharmacyRequest.belongsTo(Pharmacy, {
 
 PharmacyRequest.belongsTo(Doctor, {
 	foreignKey: "doctor_username",
+	targetKey: "username",
+	onDelete: "CASCADE",
+});
+
+
+PharmacyRequest.belongsTo(Patient, {
+	foreignKey: "patient_username",
 	targetKey: "username",
 	onDelete: "CASCADE",
 });
