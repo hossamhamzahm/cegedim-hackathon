@@ -22,6 +22,7 @@ app.use(
 app.use('/api-v1/users', SystemUserRouter);
 app.use('/api-v1/doctors', DoctorRouter);
 app.use('/api-v1/patients', PatientRouter);
+app.use('/api-v1/pharmacy', PatientRouter);
 
 app.get("*", (req: express.Request, res: express.Response) => {
     res.status(404).send({Error: "Invalid request"});
