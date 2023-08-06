@@ -46,4 +46,5 @@ app.use((err: ExpressError, req: express.Request, res: express.Response, next: e
 app.listen(config.port, async()=>{
     await migrate();
     console.log(`Listening on port ${config.port}`)
+    console.log(`UP`)
 })

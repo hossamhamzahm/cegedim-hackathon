@@ -20,6 +20,7 @@ const PharmacyRequest = sequelize.define(
                 model: Pharmacy,
                 key: 'username',
             },
+            unique: false
         },
         doctor_username: {
             type: DataTypes.STRING(20),
@@ -27,6 +28,7 @@ const PharmacyRequest = sequelize.define(
                 model: Doctor,
                 key: 'username',
             },
+            unique: false
         },
         status: {
             type: DataTypes.BOOLEAN,
@@ -39,16 +41,7 @@ const PharmacyRequest = sequelize.define(
         tableName: 'PharmacyRequest',
         underscored: true,
         timestamps: false,
-        indexes: [
-            {
-                unique: true,
-                fields: ['doctor_username'],
-            },
-            {
-                unique: true,
-                fields: ['pharmacy_username'],
-            }
-        ],
+
     }
 );
 
